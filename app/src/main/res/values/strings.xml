@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">FireChat</string>
+
+    <!-- General -->
+    <string name="app_logo_content_description">The application logo</string>
+
+    <!-- Login, Register -->
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+
+    <string name="messages">Messages</string>
+    <string name="people">People</string>
+    <string name="profile">Profile</string>
+
+    <!-- Social login -->
+    <string name="facebook_application_id">1905604059566162</string>
+    <string name="fb_login_protocol_scheme">fb1905604059566162</string>
+    <string name="twitter_consumer_key" translatable="false">Y4JmjTWzUhAAWId9A5isGfLUv </string>
+    <string name="twitter_consumer_secret" translatable="false">aykgZl1oGvLfNQhAi23KJSbFgRGRRv2yk0ZysR2TG8hHSoITJY</string>
+</resources>

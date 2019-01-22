@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1074610630243",
+    "firebase_url": "https://firechat-74187.firebaseio.com",
+    "project_id": "firechat-74187",
+    "storage_bucket": "firechat-74187.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074610630243:android:02a78ced660f8d34",
+        "android_client_info": {
+          "package_name": "hr.tvz.firechat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074610630243-lvn71b444u9ilpofpftihs3m6kcq5jmt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hr.tvz.firechat",
+            "certificate_hash": "eeefeb0c0f20cdebb259266c3077e5bfea2c8c44"
+          }
+        },
+        {
+          "client_id": "1074610630243-81833sg1rhnea9a532v1ot8ksl98kksa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEaw63a1wcISNiuR5ZKBJyuX2LBH-f73U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1074610630243-81833sg1rhnea9a532v1ot8ksl98kksa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
