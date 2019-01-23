@@ -1,6 +1,6 @@
 package hr.tvz.firechat.ui.userlist
 
-import hr.tvz.firechat.data.UserInteractor
+import hr.tvz.firechat.data.interactor.UserInteractor
 import hr.tvz.firechat.ui.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

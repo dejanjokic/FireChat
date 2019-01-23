@@ -1,4 +1,4 @@
-package hr.tvz.firechat.data
+package hr.tvz.firechat.data.interactor
 
 import hr.tvz.firechat.data.model.ChatMessage
 import io.reactivex.Observable

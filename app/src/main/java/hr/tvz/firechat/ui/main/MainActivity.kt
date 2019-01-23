@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import hr.tvz.firechat.App
 import hr.tvz.firechat.R
-import hr.tvz.firechat.data.AuthUserInteractor
+import hr.tvz.firechat.data.interactor.AuthUserInteractor
 import hr.tvz.firechat.data.model.User
 import hr.tvz.firechat.ui.chat.ChatFragment
 import hr.tvz.firechat.ui.profile.UserProfileFragment

@@ -7,7 +7,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
-import hr.tvz.firechat.data.*
+import hr.tvz.firechat.data.interactor.*
 import hr.tvz.firechat.data.repository.FirebaseMessagesRepository
 import hr.tvz.firechat.data.repository.FirebaseUsersRepository
 import hr.tvz.firechat.data.repository.MessagesRepository

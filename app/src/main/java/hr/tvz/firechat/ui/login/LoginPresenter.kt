@@ -1,6 +1,6 @@
 package hr.tvz.firechat.ui.login
 
-import hr.tvz.firechat.data.AuthUserInteractor
+import hr.tvz.firechat.data.interactor.AuthUserInteractor
 import hr.tvz.firechat.data.model.UserMapper
 import hr.tvz.firechat.data.repository.UsersRepository
 import hr.tvz.firechat.ui.base.BasePresenter

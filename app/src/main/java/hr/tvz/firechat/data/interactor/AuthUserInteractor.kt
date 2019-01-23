@@ -1,4 +1,4 @@
-package hr.tvz.firechat.data
+package hr.tvz.firechat.data.interactor
 
 import com.google.firebase.auth.FirebaseUser
 import hr.tvz.firechat.data.model.User

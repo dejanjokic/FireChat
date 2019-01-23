@@ -1,4 +1,4 @@
-package hr.tvz.firechat.data
+package hr.tvz.firechat.data.interactor
 
 import hr.tvz.firechat.data.model.User
 import hr.tvz.firechat.data.repository.UsersRepository

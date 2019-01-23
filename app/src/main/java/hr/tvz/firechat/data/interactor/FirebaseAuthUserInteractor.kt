@@ -1,4 +1,4 @@
-package hr.tvz.firechat.data
+package hr.tvz.firechat.data.interactor
 
 import android.content.Context
 import android.content.Intent
