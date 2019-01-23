@@ -6,4 +6,8 @@ object Constants {
         const val USERS_COLLECTION = "users"
         const val MESSAGES_COLLECTION = "messages"
     }
+
+    object MLKit {
+        const val RESULT_LOAD_IMAGE = 123
+    }
 }

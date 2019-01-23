@@ -14,6 +14,10 @@
     <string name="people">People</string>
     <string name="profile">Profile</string>
 
+    <string name="dialog_text_title">Send a text message</string>
+    <string name="dialog_gallery_title">Select an image</string>
+    <string name="dialog_camera_title">Take a photo</string>
+
     <!-- Social login -->
     <string name="facebook_application_id">1905604059566162</string>
     <string name="fb_login_protocol_scheme">fb1905604059566162</string>

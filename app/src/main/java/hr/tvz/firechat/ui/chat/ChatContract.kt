@@ -9,13 +9,17 @@ interface ChatContract {
 
         fun showMessages(messages: List<ChatMessage>)
 
-        fun sendMessage()
+        fun showTextDialog()
+
+        fun showGalleryDialog()
+
+        fun showCameraDialog()
     }
 
     interface Presenter : BaseContract.Presenter<View> {
 
         fun loadMessages()
 
-        fun sendMessage(message: ChatMessage)
+        fun sendMessage(text: String? = "", imageUrl: String? = "", type: ChatMessage.Type = ChatMessage.Type.TEXT)
     }
 }

@@ -1,10 +1,16 @@
 package hr.tvz.firechat.data.model
 
-// TODO: AttachedImageUrl?
 data class ChatMessage(
     val id: String? = "",
     val senderId: String? = "",
-    val receiverId: String? = "",
+    val senderName: String? = "",
+    val senderAvatar: String? = "",
     val text: String? = "",
-    val timestamp: String? = ""
-)
+    val attachedImageUrl: String? = "",
+    val timestamp: String? = "",
+    val type: Type = Type.TEXT
+) {
+    enum class Type {
+        TEXT, IMAGE
+    }
+}

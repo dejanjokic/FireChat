@@ -87,20 +87,20 @@ class MainModule {
      * Presenter
      */
     @Provides
-    fun provideLoginPresenter(firebaseAuthUserInteractor: AuthUserInteractor, usersRepository: UsersRepository): LoginContract.Presenter =
-        LoginPresenter(firebaseAuthUserInteractor, usersRepository)
+    fun provideLoginPresenter(authUserInteractor: AuthUserInteractor, usersRepository: UsersRepository): LoginContract.Presenter =
+        LoginPresenter(authUserInteractor, usersRepository)
 
     @Provides
-    fun provideChatPresenter(firebaseMessagesInteractor: MessagesInteractor): ChatContract.Presenter =
-        ChatPresenter(firebaseMessagesInteractor)
+    fun provideChatPresenter(messagesInteractor: MessagesInteractor, authUserInteractor: AuthUserInteractor): ChatContract.Presenter =
+        ChatPresenter(messagesInteractor, authUserInteractor)
 
     @Provides
     fun provideUserListPresenter(userInteractor: UserInteractor): UserListContract.Presenter =
         UserListPresenter(userInteractor)
 
     @Provides
-    fun provideUserProfilePresenter(firebaseUserInteractor: UserInteractor): UserProfileContract.Presenter =
-            UserProfilePresenter(firebaseUserInteractor)
+    fun provideUserProfilePresenter(userInteractor: UserInteractor): UserProfileContract.Presenter =
+            UserProfilePresenter(userInteractor)
 
     // MessageListPresenter
     // ProfilePresenter -> authInteractor, userInteractor?
