@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorAccentDark">#F91B60</color>
     <color name="colorAccentRipple">#DDC71B60</color>
+    <color name="colorBackgroundLight">#DDD</color>
 </resources>

@@ -111,6 +111,8 @@ class ChatFragment : Fragment(), ChatContract.View {
 
     override fun showMessages(messages: List<ChatMessage>) {
         chatAdapter.submitList(messages.sortedWith(compareBy { it.timestamp }))
+        // TODO: Fix scroll!
+        recyclerViewChatMessages.smoothScrollToPosition(chatAdapter.itemCount - 1)
         for (m in messages) {
             Timber.w("Message: $m")
         }
@@ -238,5 +240,9 @@ class ChatFragment : Fragment(), ChatContract.View {
             .addOnFailureListener {
                 showError(it.toString())
             }
+    }
+
+    override fun scrollToLastMessage() {
+        recyclerViewChatMessages.smoothScrollToPosition(recyclerViewChatMessages.adapter!!.itemCount)
     }
 }

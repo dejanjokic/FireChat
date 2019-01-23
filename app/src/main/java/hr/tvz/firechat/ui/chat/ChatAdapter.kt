@@ -8,24 +8,50 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import hr.tvz.firechat.R
 import hr.tvz.firechat.data.model.ChatMessage
+import kotlinx.android.synthetic.main.list_item_received_message.view.*
 import kotlinx.android.synthetic.main.list_item_sent_message.view.*
 
-class ChatAdapter(private val clickListener: (ChatMessage) -> Unit) : ListAdapter<ChatMessage, ChatAdapter.ViewHolder>(ChatDiffCallback()) {
+// Samsung: mnXKglcFwwg5EsjYOWWhjnAO5gI3
+class ChatAdapter(private val currentUserId: String = "hkKX8vUJXVTikG93PPmwp4Wbic73", private val clickListener: (ChatMessage) -> Unit)
+    : ListAdapter<ChatMessage, ChatAdapter.MessageViewHolder>(ChatDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_item_sent_message, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
+        return when (viewType) {
+            R.layout.list_item_sent_message -> SentMessageViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.list_item_sent_message, parent,false))
+            else -> ReceivedMessageViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.list_item_received_message, parent, false))
+        }
+    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         holder.bind(getItem(position), clickListener)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position).senderId) {
+            currentUserId -> R.layout.list_item_sent_message
+            else -> R.layout.list_item_received_message
+        }
+    }
 
-        fun bind(chatMessage: ChatMessage, clickListener: (ChatMessage) -> Unit) = with(itemView) {
-            textViewMessageContent.text = chatMessage.toString()
+    abstract class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        abstract fun bind(chatMessage: ChatMessage, clickListener: (ChatMessage) -> Unit)
+    }
 
-            setOnClickListener { clickListener(chatMessage) }
+    class ReceivedMessageViewHolder(itemView: View) : MessageViewHolder(itemView) {
+
+        override fun bind(chatMessage: ChatMessage, clickListener: (ChatMessage) -> Unit) = with(itemView) {
+
+            textViewReceivedMessageContent.text = chatMessage.text
+        }
+    }
+
+    class SentMessageViewHolder(itemView: View) : MessageViewHolder(itemView) {
+
+        override fun bind(chatMessage: ChatMessage, clickListener: (ChatMessage) -> Unit) = with(itemView) {
+
+            textViewSentMessageContent.text = chatMessage.text
         }
     }
 
