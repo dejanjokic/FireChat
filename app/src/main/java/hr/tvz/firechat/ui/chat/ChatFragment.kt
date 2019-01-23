@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY
@@ -32,9 +33,9 @@ class ChatFragment : Fragment(), ChatContract.View {
 
     @Inject lateinit var chatPresenter: ChatContract.Presenter
 
-    private val chatAdapter = ChatAdapter {
-        // Click?
-    }
+    private val chatAdapter = ChatAdapter(FirebaseAuth.getInstance().currentUser!!.uid, {
+        // OnClick?
+    })
 
     companion object {
         fun newInstance() = ChatFragment()
@@ -94,7 +95,7 @@ class ChatFragment : Fragment(), ChatContract.View {
     }
 
     override fun showLoading() {
-        fabMenu.gone()
+//        fabMenu.gone()
         recyclerViewChatMessages.gone()
         progressBarChat.visible()
     }
@@ -111,10 +112,12 @@ class ChatFragment : Fragment(), ChatContract.View {
 
     override fun showMessages(messages: List<ChatMessage>) {
         chatAdapter.submitList(messages.sortedWith(compareBy { it.timestamp }))
+        chatAdapter.notifyDataSetChanged()
         // TODO: Fix scroll!
         recyclerViewChatMessages.smoothScrollToPosition(chatAdapter.itemCount - 1)
         for (m in messages) {
-            Timber.w("Message: $m")
+//            Timber.w("Message: $m")
+            Timber.w("${m.text} - ${m.timestamp}")
         }
     }
 
@@ -139,7 +142,6 @@ class ChatFragment : Fragment(), ChatContract.View {
                 // TODO: Empty message
             }
         }
-
     }
 
     override fun showGalleryDialog() {

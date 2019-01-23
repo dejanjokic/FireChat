@@ -27,6 +27,10 @@ class ChatPresenter @Inject constructor(
                 }
             }, {
                 Timber.w("Error getting messages: $it")
+                view?.apply {
+                    hideLoading()
+                    showError(it.toString())
+                }
             })
         if (d != null) {
             compositeDisposable.add(d)
@@ -36,18 +40,23 @@ class ChatPresenter @Inject constructor(
     override fun sendMessage(text: String?, imageUrl: String?, type: ChatMessage.Type) {
         val user = firebaseAuthUserInteractor.getCurrentUser()
 
-        if (user != null) {
-            val message = ChatMessage(
-                id = UUID.randomUUID().toString(),
-                senderId = user.id,
-                senderName = user.displayName,
-                senderAvatar = user.profilePicturePath,
-                text = text,
-                attachedImageUrl = "", // TODO
-                timestamp = LocalDateTime.now().toString(),
-                type = type
-            )
-            firebaseMessagesInteractor.sendMessage(message)
-        }
+        // TODO: Timestamp
+        // https://stackoverflow.com/questions/33096128/when-making-a-pojo-in-firebase-can-you-use-servervalue-timestamp?lq=1
+        // https://stackoverflow.com/questions/36658833/firebase-servervalue-timestamp-in-java-data-models-objects
+
+            if (user != null) {
+                val message = ChatMessage(
+                    id = UUID.randomUUID().toString(),
+                    senderId = user.id,
+                    senderName = user.displayName,
+                    senderAvatar = user.profilePicturePath,
+                    text = text,
+                    attachedImageUrl = "", // TODO
+                    timestamp = LocalDateTime.now().toString(),
+                    type = type
+                )
+                firebaseMessagesInteractor.sendMessage(message)
+            }
     }
 }
+
