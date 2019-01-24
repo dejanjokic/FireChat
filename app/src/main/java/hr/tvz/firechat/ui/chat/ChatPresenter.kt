@@ -23,7 +23,6 @@ class ChatPresenter @Inject constructor(
                 view?.apply {
                     hideLoading()
                     showMessages(it)
-                    scrollToLastMessage()
                 }
             }, {
                 Timber.w("Error getting messages: $it")

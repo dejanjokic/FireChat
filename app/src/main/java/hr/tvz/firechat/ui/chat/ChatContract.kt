@@ -15,7 +15,7 @@ interface ChatContract {
 
         fun showCameraDialog()
 
-        fun scrollToLastMessage()
+        fun checkCameraPermission()
     }
 
     interface Presenter : BaseContract.Presenter<View> {

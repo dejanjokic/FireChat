@@ -18,6 +18,8 @@
     <string name="dialog_gallery_title">Select an image</string>
     <string name="dialog_camera_title">Take a photo</string>
 
+    <string name="permission_camera_denied">You can\'t use this feature without granting the Camera permission. Please try again.</string>
+
     <!-- Social login -->
     <string name="facebook_application_id">1905604059566162</string>
     <string name="fb_login_protocol_scheme">fb1905604059566162</string>

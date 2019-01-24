@@ -34,15 +34,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.firebase:firebase-firestore:17.1.5'
-    implementation 'com.google.firebase:firebase-storage:16.0.5'
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
     implementation 'com.google.firebase:firebase-ml-vision:18.0.2'
     implementation 'com.google.firebase:firebase-ml-model-interpreter:16.2.4'
 
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
-    implementation 'com.firebaseui:firebase-ui-firestore:4.3.1'
-    implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
 
     // Play Services
     implementation 'com.google.android.gms:play-services-auth:16.0.1'

@@ -1,5 +1,7 @@
 package hr.tvz.firechat.ui.chat
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
@@ -8,22 +10,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.florent37.runtimepermission.rx.RxPermissions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.*
-import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark.*
 import hr.tvz.firechat.App
 import hr.tvz.firechat.R
 import hr.tvz.firechat.data.model.ChatMessage
 import hr.tvz.firechat.util.Constants.MLKit.RESULT_LOAD_IMAGE
 import hr.tvz.firechat.util.ext.gone
 import hr.tvz.firechat.util.ext.visible
+import kotlinx.android.synthetic.main.dialog_camera_message.view.*
 import kotlinx.android.synthetic.main.dialog_text_message.view.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import timber.log.Timber
@@ -72,7 +76,8 @@ class ChatFragment : Fragment(), ChatContract.View {
         }
 
         fabCamera.setOnClickListener {
-
+            checkCameraPermission()
+            fabMenu.close(true)
         }
     }
 
@@ -95,7 +100,6 @@ class ChatFragment : Fragment(), ChatContract.View {
     }
 
     override fun showLoading() {
-//        fabMenu.gone()
         recyclerViewChatMessages.gone()
         progressBarChat.visible()
     }
@@ -107,18 +111,13 @@ class ChatFragment : Fragment(), ChatContract.View {
     }
 
     override fun showError(errorMessage: String) {
-
+        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
     override fun showMessages(messages: List<ChatMessage>) {
         chatAdapter.submitList(messages.sortedWith(compareBy { it.timestamp }))
-        chatAdapter.notifyDataSetChanged()
         // TODO: Fix scroll!
         recyclerViewChatMessages.smoothScrollToPosition(chatAdapter.itemCount - 1)
-        for (m in messages) {
-//            Timber.w("Message: $m")
-            Timber.w("${m.text} - ${m.timestamp}")
-        }
     }
 
     override fun showTextDialog() {
@@ -153,7 +152,36 @@ class ChatFragment : Fragment(), ChatContract.View {
     }
 
     override fun showCameraDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_camera_message, null)
 
+        val dialog = AlertDialog.Builder(context!!)
+            .setView(view)
+            .setTitle(R.string.dialog_camera_title)
+            .create()
+
+        dialog.show()
+//        val cameraViewww = view.cameraView
+
+        view.buttonCamera.setOnClickListener {
+//            val fotoapparat = Fotoapparat(context = context!!, view = cameraViewww)
+            Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    override fun checkCameraPermission() {
+        RxPermissions(this).request(Manifest.permission.CAMERA).subscribe(
+            { result ->
+                if (result.isAccepted) {
+                    showCameraDialog()
+                } else {
+                    showError(getString(R.string.permission_camera_denied))
+                }
+            },
+            { t ->
+                Timber.e("Error requesting permission: $t")
+            }
+        )
     }
 
     private fun processFace(uri: Uri) {
@@ -170,58 +198,8 @@ class ChatFragment : Fragment(), ChatContract.View {
 
         detector.detectInImage(image).addOnSuccessListener { faces ->
 
+            // TODO: Only one face
             for (face in faces) {
-
-                val leftEar = face.getLandmark(LEFT_EAR)
-                leftEar?.let {
-                    val leftEarPosition = leftEar.position
-                }
-
-                val rightEar = face.getLandmark(RIGHT_EAR)
-                rightEar?.let {
-                    val rightEarPosition = rightEar.position
-                }
-
-                val leftEye = face.getLandmark(LEFT_EYE)
-                leftEye?.let {
-                    val leftEyePosition = leftEye.position
-                }
-
-                val rightEye = face.getLandmark(RIGHT_EYE)
-                rightEye?.let {
-                    val rightEyePosition = rightEye.position
-                }
-
-                val mouthRight = face.getLandmark(MOUTH_RIGHT)
-                mouthRight?.let {
-                    val mouthRightPosition = mouthRight.position
-                }
-
-                val mouthLeft = face.getLandmark(MOUTH_LEFT)
-                mouthLeft?.let {
-                    val mouthLeftPosition = mouthLeft.position
-                }
-
-                val mouthBottom = face.getLandmark(MOUTH_BOTTOM)
-                mouthBottom?.let {
-                    val mouthBottomPosition = mouthBottom.position
-                }
-
-                val leftCheek = face.getLandmark(LEFT_CHEEK)
-                leftCheek?.let {
-                    val leftCheekPosition = leftCheek.position
-                }
-
-                val rightCheek = face.getLandmark(RIGHT_CHEEK)
-                rightCheek?.let {
-                    val rightCheekPosition = rightCheek.position
-                }
-
-                val noseBase = face.getLandmark(NOSE_BASE)
-                noseBase?.let {
-                    val noseBasePosition = noseBase.position
-                }
-
                 // Classification
                 if (face.smilingProbability != UNCOMPUTED_PROBABILITY) {
                     val smileProb = face.smilingProbability
@@ -242,9 +220,5 @@ class ChatFragment : Fragment(), ChatContract.View {
             .addOnFailureListener {
                 showError(it.toString())
             }
-    }
-
-    override fun scrollToLastMessage() {
-        recyclerViewChatMessages.smoothScrollToPosition(recyclerViewChatMessages.adapter!!.itemCount)
     }
 }

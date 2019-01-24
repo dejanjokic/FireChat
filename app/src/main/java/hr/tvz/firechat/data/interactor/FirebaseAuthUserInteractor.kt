@@ -22,7 +22,6 @@ class FirebaseAuthUserInteractor @Inject constructor(
 
     override fun getFirebaseUser(): FirebaseUser? = firebaseAuth.currentUser
 
-    // ???
     override fun logoutUser() {
         authUI.signOut(context).addOnSuccessListener {
             context.startActivity(Intent(context, LoginActivity::class.java))
