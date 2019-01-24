@@ -7,13 +7,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.github.florent37.runtimepermission.rx.RxPermissions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ml.vision.FirebaseVision
@@ -27,10 +29,14 @@ import hr.tvz.firechat.data.model.ChatMessage
 import hr.tvz.firechat.util.Constants.MLKit.RESULT_LOAD_IMAGE
 import hr.tvz.firechat.util.ext.gone
 import hr.tvz.firechat.util.ext.visible
-import kotlinx.android.synthetic.main.dialog_camera_message.view.*
-import kotlinx.android.synthetic.main.dialog_text_message.view.*
+import io.fotoapparat.Fotoapparat
+import io.fotoapparat.selector.front
+import kotlinx.android.synthetic.main.dialog_camera_message.*
+import kotlinx.android.synthetic.main.dialog_text_message.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import timber.log.Timber
+import java.io.File
+import java.util.*
 import javax.inject.Inject
 
 class ChatFragment : Fragment(), ChatContract.View {
@@ -53,7 +59,7 @@ class ChatFragment : Fragment(), ChatContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_chat, container, false)
+            inflater.inflate(R.layout.fragment_chat, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -116,29 +122,23 @@ class ChatFragment : Fragment(), ChatContract.View {
 
     override fun showMessages(messages: List<ChatMessage>) {
         chatAdapter.submitList(messages.sortedWith(compareBy { it.timestamp }))
-        // TODO: Fix scroll!
+        // TODO: Fix scroll?
         recyclerViewChatMessages.smoothScrollToPosition(chatAdapter.itemCount - 1)
     }
 
     override fun showTextDialog() {
 
-        val view = layoutInflater.inflate(R.layout.dialog_text_message, null)
-
-        val dialog = AlertDialog.Builder(context!!)
-            .setView(view)
-            .setTitle(R.string.dialog_text_title)
-            .create()
-
-        dialog.show()
-
-        view.fabSendMessage.setOnClickListener {
-
-            val text = view.editTextChatMessage.text.toString().trim()
-            if (!text.isEmpty()) {
-                chatPresenter.sendMessage(text = text)
-                dialog.dismiss()
-            } else {
-                // TODO: Empty message
+        MaterialDialog(context!!).show {
+            customView(R.layout.dialog_text_message)
+            title(R.string.dialog_text_title)
+            fabSendMessage.setOnClickListener {
+                val text = editTextChatMessage.text.toString().trim()
+                if (!text.isEmpty()) {
+                    chatPresenter.sendMessage(text = text)
+                    this.dismiss()
+                } else {
+                    // TODO: Empty message
+                }
             }
         }
     }
@@ -152,49 +152,54 @@ class ChatFragment : Fragment(), ChatContract.View {
     }
 
     override fun showCameraDialog() {
-        val view = layoutInflater.inflate(R.layout.dialog_camera_message, null)
 
-        val dialog = AlertDialog.Builder(context!!)
-            .setView(view)
-            .setTitle(R.string.dialog_camera_title)
-            .create()
-
-        dialog.show()
-//        val cameraViewww = view.cameraView
-
-        view.buttonCamera.setOnClickListener {
-//            val fotoapparat = Fotoapparat(context = context!!, view = cameraViewww)
-            Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show()
+        MaterialDialog(context!!).show {
+            customView(R.layout.dialog_camera_message)
+            val fotoapparat = Fotoapparat(context = context, view = this.cameraView, lensPosition = front())
+            fotoapparat.start()
+            buttonCameraCapture.setOnClickListener {
+                val file = File(Environment.getExternalStorageDirectory(),
+                        "${UUID.randomUUID()}.jpg")
+                fotoapparat.takePicture().saveToFile(file).whenAvailable {
+                    // TODO: Filename
+                    Timber.w("Saved: ${file.absolutePath}")
+                    fotoapparat.stop()
+                    processFace(Uri.fromFile(file))
+                    this.dismiss()
+                }
+            }
         }
     }
 
     @SuppressLint("CheckResult")
     override fun checkCameraPermission() {
-        RxPermissions(this).request(Manifest.permission.CAMERA).subscribe(
-            { result ->
-                if (result.isAccepted) {
-                    showCameraDialog()
-                } else {
-                    showError(getString(R.string.permission_camera_denied))
+        RxPermissions(this).request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(
+                { result ->
+                    if (result.isAccepted) {
+                        showCameraDialog()
+                    } else {
+                        showError(getString(R.string.error_message_permissions_denied))
+                    }
+                },
+                { t ->
+                    Timber.e("Error requesting permission: $t")
                 }
-            },
-            { t ->
-                Timber.e("Error requesting permission: $t")
-            }
         )
     }
 
-    private fun processFace(uri: Uri) {
+    // TODO: Send message
+    // MLKit Interactor?
+    override fun processFace(uri: Uri) {
         val image = FirebaseVisionImage.fromFilePath(context!!, uri)
 
         val options = FirebaseVisionFaceDetectorOptions.Builder()
-            .setPerformanceMode(ACCURATE)
-            .setLandmarkMode(ALL_LANDMARKS)
-            .setClassificationMode(ALL_CLASSIFICATIONS)
-            .build()
+                .setPerformanceMode(ACCURATE)
+                .setLandmarkMode(ALL_LANDMARKS)
+                .setClassificationMode(ALL_CLASSIFICATIONS)
+                .build()
 
         val detector = FirebaseVision.getInstance()
-            .getVisionFaceDetector(options)
+                .getVisionFaceDetector(options)
 
         detector.detectInImage(image).addOnSuccessListener { faces ->
 
@@ -217,8 +222,8 @@ class ChatFragment : Fragment(), ChatContract.View {
                 }
             }
         }
-            .addOnFailureListener {
-                showError(it.toString())
-            }
+                .addOnFailureListener {
+                    showError(it.toString())
+                }
     }
 }

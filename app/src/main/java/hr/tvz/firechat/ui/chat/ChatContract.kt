@@ -1,5 +1,6 @@
 package hr.tvz.firechat.ui.chat
 
+import android.net.Uri
 import hr.tvz.firechat.data.model.ChatMessage
 import hr.tvz.firechat.ui.base.BaseContract
 
@@ -16,6 +17,8 @@ interface ChatContract {
         fun showCameraDialog()
 
         fun checkCameraPermission()
+
+        fun processFace(uri: Uri)
     }
 
     interface Presenter : BaseContract.Presenter<View> {
