@@ -45,6 +45,7 @@ class ChatAdapter(private val currentUserId: String, private val clickListener: 
 
         override fun bind(chatMessage: ChatMessage, clickListener: (ChatMessage) -> Unit) = with(itemView) {
 
+            // TODO: Placeholder
             GlideApp.with(itemView)
                     .load(chatMessage.senderAvatar)
                     .apply(RequestOptions.circleCropTransform())

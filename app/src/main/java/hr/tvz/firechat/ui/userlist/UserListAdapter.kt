@@ -28,6 +28,7 @@ class UserListAdapter(private val clickListener: (User) -> Unit) : ListAdapter<U
         fun bind(user: User, clickListener: (User) -> Unit) = with(itemView) {
             textViewUserItemName.text = user.displayName ?: user.email
 
+            // TODO: Placeholder
             GlideApp.with(itemView)
                 .load(user.profilePicturePath)
                 .transforms(CenterCrop(), RoundedCorners(360))

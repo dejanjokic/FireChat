@@ -66,6 +66,7 @@ class UserProfileFragment : Fragment(), UserProfileContract.View {
         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
+    // TODO: Placeholder
     override fun showUserInfo(user: User?) = with(user) {
         if (user != null) {
             textViewUserProfileDisplayName.text = user.displayName
