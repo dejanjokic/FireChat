@@ -4,22 +4,17 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 import hr.tvz.firechat.App
 import hr.tvz.firechat.R
-import hr.tvz.firechat.data.interactor.AuthUserInteractor
-import hr.tvz.firechat.data.model.User
 import hr.tvz.firechat.ui.chat.ChatFragment
 import hr.tvz.firechat.ui.profile.UserProfileFragment
 import hr.tvz.firechat.ui.userlist.UserListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainContract.View {
 
-    @Inject lateinit var firebaseAuthUserInteractor: AuthUserInteractor
-
-    private var currentUser: User? = null
+    @Inject lateinit var mainPresenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,30 +22,20 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbarMain)
 
         (application as App).component.inject(this)
-        currentUser = firebaseAuthUserInteractor.getCurrentUser()
-
+        mainPresenter.attach(this)
 
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_messages -> {
-                    // TODO: ID
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerMain, ChatFragment.newInstance())
-                        .commit()
+                    showMessageView()
                     true
                 }
                 R.id.navigation_people -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerMain, UserListFragment.newInstance())
-                        .commit()
+                    showUserListView()
                     true
                 }
                 R.id.navigation_profile -> {
-                    // TODO: SharedPrefs ID
-                    val id = FirebaseAuth.getInstance().currentUser?.uid
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerMain, UserProfileFragment.newInstance(id))
-                        .commit()
+                    showProfileView()
                     true
                 }
                 else -> false
@@ -67,10 +52,33 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_logout -> {
-                firebaseAuthUserInteractor.logoutUser()
-                finish()
+                onLogoutClick()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun showMessageView() {
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.containerMain, ChatFragment.newInstance(mainPresenter.getCurrentUserId()))
+                .commit()
+    }
+
+    override fun showUserListView() {
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.containerMain, UserListFragment.newInstance())
+                .commit()
+    }
+
+    override fun showProfileView() {
+
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.containerMain, UserProfileFragment.newInstance(mainPresenter.getCurrentUserId()))
+                .commit()
+    }
+
+    override fun onLogoutClick() {
+        mainPresenter.logoutUser()
+        finish()
     }
 }

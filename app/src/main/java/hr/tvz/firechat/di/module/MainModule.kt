@@ -16,6 +16,8 @@ import hr.tvz.firechat.ui.chat.ChatContract
 import hr.tvz.firechat.ui.chat.ChatPresenter
 import hr.tvz.firechat.ui.login.LoginContract
 import hr.tvz.firechat.ui.login.LoginPresenter
+import hr.tvz.firechat.ui.main.MainContract
+import hr.tvz.firechat.ui.main.MainPresenter
 import hr.tvz.firechat.ui.profile.UserProfileContract
 import hr.tvz.firechat.ui.profile.UserProfilePresenter
 import hr.tvz.firechat.ui.userlist.UserListContract
@@ -90,6 +92,10 @@ class MainModule {
     @Provides
     fun provideLoginPresenter(authUserInteractor: AuthUserInteractor, usersRepository: UsersRepository): LoginContract.Presenter =
         LoginPresenter(authUserInteractor, usersRepository)
+
+    @Provides
+    fun provideMainPresenter(authUserInteractor: AuthUserInteractor): MainContract.Presenter =
+            MainPresenter(authUserInteractor)
 
     @Provides
     fun provideChatPresenter(messagesInteractor: MessagesInteractor, authUserInteractor: AuthUserInteractor): ChatContract.Presenter =

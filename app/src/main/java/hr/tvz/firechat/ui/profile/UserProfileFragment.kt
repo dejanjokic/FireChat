@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import hr.tvz.firechat.App
 import hr.tvz.firechat.R
 import hr.tvz.firechat.data.model.User
 import hr.tvz.firechat.util.ext.gone
 import hr.tvz.firechat.util.ext.visible
+import hr.tvz.firechat.util.glide.GlideApp
 import kotlinx.android.synthetic.main.fragment_user_profile.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class UserProfileFragment : Fragment(), UserProfileContract.View {
@@ -62,21 +63,17 @@ class UserProfileFragment : Fragment(), UserProfileContract.View {
     }
 
     override fun showError(errorMessage: String) {
-        Timber.w("ERRORRRRRRRRRRRRRRRRR $errorMessage")
+        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
-    // TODO: Icons? Editing?
     override fun showUserInfo(user: User?) = with(user) {
         if (user != null) {
             textViewUserProfileDisplayName.text = user.displayName
             textViewUserProfileEmail.text = user.email
-            Glide.with(context!!)
-                .load(this!!.profilePicturePath)
-                .into(imageViewUserProfileAvatar)
+            GlideApp.with(context!!)
+                    .load(this!!.profilePicturePath)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imageViewUserProfileAvatar)
         }
-        Timber.w("***************")
-        Timber.w("Display name: ${user?.displayName}")
-        Timber.w("Email: ${user?.email}")
-        Timber.w("***************")
     }
 }

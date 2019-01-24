@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.github.florent37.runtimepermission.rx.RxPermissions
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY
@@ -43,12 +42,15 @@ class ChatFragment : Fragment(), ChatContract.View {
 
     @Inject lateinit var chatPresenter: ChatContract.Presenter
 
-    private val chatAdapter = ChatAdapter(FirebaseAuth.getInstance().currentUser!!.uid, {
-        // OnClick?
-    })
+    private lateinit var chatAdapter: ChatAdapter
 
     companion object {
-        fun newInstance() = ChatFragment()
+        private const val CURRENT_USER_ID = "current_user_id"
+        fun newInstance(currentUserId: String) = ChatFragment().apply {
+            arguments = Bundle().apply {
+                putString(CURRENT_USER_ID, currentUserId)
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -64,6 +66,10 @@ class ChatFragment : Fragment(), ChatContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        chatAdapter = ChatAdapter(arguments?.getString(CURRENT_USER_ID) ?: "", {
+            // OnClick
+        })
+
         chatPresenter.loadMessages()
 
         recyclerViewChatMessages.apply {
@@ -75,12 +81,10 @@ class ChatFragment : Fragment(), ChatContract.View {
             showTextDialog()
             fabMenu.close(true)
         }
-
         fabGallery.setOnClickListener {
             showGalleryDialog()
             fabMenu.close(true)
         }
-
         fabCamera.setOnClickListener {
             checkCameraPermission()
             fabMenu.close(true)
