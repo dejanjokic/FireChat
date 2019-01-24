@@ -13,8 +13,7 @@ import hr.tvz.firechat.util.glide.GlideApp
 import kotlinx.android.synthetic.main.list_item_received_message.view.*
 import kotlinx.android.synthetic.main.list_item_sent_message.view.*
 
-// Samsung: mnXKglcFwwg5EsjYOWWhjnAO5gI3
-class ChatAdapter(private val currentUserId: String = "hkKX8vUJXVTikG93PPmwp4Wbic73", private val clickListener: (ChatMessage) -> Unit)
+class ChatAdapter(private val currentUserId: String, private val clickListener: (ChatMessage) -> Unit)
     : ListAdapter<ChatMessage, ChatAdapter.MessageViewHolder>(ChatDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
