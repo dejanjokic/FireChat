@@ -27,6 +27,8 @@ class FirebaseMessagesRepository @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 Timber.w("Ok! ${it.path}")
-            }, {  })
+            }, {
+
+            })
     }
 }
