@@ -102,7 +102,4 @@ class MainModule {
     @Provides
     fun provideUserProfilePresenter(userInteractor: UserInteractor): UserProfileContract.Presenter =
             UserProfilePresenter(userInteractor)
-
-    // MessageListPresenter
-    // ProfilePresenter -> authInteractor, userInteractor?
 }

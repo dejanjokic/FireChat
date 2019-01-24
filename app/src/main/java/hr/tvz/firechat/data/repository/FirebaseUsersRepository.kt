@@ -22,9 +22,4 @@ class FirebaseUsersRepository @Inject constructor(
 
     override fun saveUser(user: User): Completable =
         RxFirestore.setDocument(ref.document(user.id), user)
-
-    // Completable?
-    override fun updateUser(user: User) {
-
-    }
 }

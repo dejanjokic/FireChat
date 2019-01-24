@@ -1,6 +1,5 @@
 package hr.tvz.firechat.data.repository
 
-import com.google.firebase.firestore.DocumentSnapshot
 import hr.tvz.firechat.data.model.User
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -13,6 +12,4 @@ interface UsersRepository {
     fun getUser(id: String): Maybe<User>
 
     fun saveUser(user: User): Completable
-
-    fun updateUser(user: User)
 }
