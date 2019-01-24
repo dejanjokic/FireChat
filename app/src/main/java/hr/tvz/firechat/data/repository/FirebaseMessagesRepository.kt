@@ -1,5 +1,6 @@
 package hr.tvz.firechat.data.repository
 
+import android.annotation.SuppressLint
 import com.google.firebase.firestore.CollectionReference
 import durdinapps.rxfirebase2.RxFirestore
 import hr.tvz.firechat.data.model.ChatMessage
@@ -16,19 +17,19 @@ class FirebaseMessagesRepository @Inject constructor(
 ) : MessagesRepository {
 
     override fun getMessagesCollection(): Flowable<MutableList<ChatMessage>> =
-        RxFirestore.observeQueryRef(ref, ChatMessage::class.java)
+            RxFirestore.observeQueryRef(ref, ChatMessage::class.java)
 
-    // Completable
+    // TODO: Completable?
+    @SuppressLint("CheckResult")
     override fun saveMessage(chatMessage: ChatMessage) {
-        Timber.w("Repository saving message... $chatMessage")
-
         RxFirestore.addDocument(ref, chatMessage)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Timber.w("Ok! ${it.path}")
+                Timber.w("Message successfully saved to: ${it.path}")
             }, {
-
+                // Error saving message
+                Timber.e("Error saving message: $it")
             })
     }
 }

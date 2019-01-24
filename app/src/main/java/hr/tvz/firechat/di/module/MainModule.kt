@@ -43,6 +43,7 @@ class MainModule {
     @Singleton
     fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
+
     @Named(USERS_COLLECTION)
     @Provides
     @Singleton

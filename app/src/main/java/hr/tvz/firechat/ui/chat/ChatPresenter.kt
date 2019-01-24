@@ -6,6 +6,7 @@ import hr.tvz.firechat.data.model.ChatMessage
 import hr.tvz.firechat.ui.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.threeten.bp.LocalDateTime
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -50,7 +51,8 @@ class ChatPresenter @Inject constructor(
                     senderAvatar = user.profilePicturePath,
                     text = text,
                     attachedImageUrl = "", // TODO
-                    type = type
+                    type = type,
+                    timestamp = LocalDateTime.now().toString()
                 )
                 firebaseMessagesInteractor.sendMessage(message)
             }

@@ -1,8 +1,5 @@
 package hr.tvz.firechat.data.model
 
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.ServerTimestamp
-
 data class ChatMessage(
         val id: String? = "",
         val senderId: String? = "",
@@ -10,7 +7,7 @@ data class ChatMessage(
         val senderAvatar: String? = "",
         val text: String? = "",
         val attachedImageUrl: String? = "",
-        @ServerTimestamp val timestamp: Timestamp? = null,
+        val timestamp: String? = "",
         val type: Type = Type.TEXT
 ) {
     enum class Type {
