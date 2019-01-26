@@ -17,14 +17,16 @@ interface ChatContract {
         fun showCameraDialog()
 
         fun checkCameraPermission()
-
-        fun processFace(uri: Uri)
     }
 
     interface Presenter : BaseContract.Presenter<View> {
 
         fun loadMessages()
 
-        fun sendMessage(text: String? = "", imageUrl: String? = "", type: ChatMessage.Type = ChatMessage.Type.TEXT)
+        fun sendTextMessage(text: String? = "")
+
+        fun processAndSendEmotion(uri: Uri)
+
+        fun sendEmotionMessage(emotion: ChatMessage.Emotion)
     }
 }

@@ -17,11 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.github.florent37.runtimepermission.rx.RxPermissions
-import com.google.firebase.ml.vision.FirebaseVision
-import com.google.firebase.ml.vision.common.FirebaseVisionImage
-import com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY
-import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
-import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.*
 import hr.tvz.firechat.App
 import hr.tvz.firechat.R
 import hr.tvz.firechat.data.model.ChatMessage
@@ -102,7 +97,7 @@ class ChatFragment : Fragment(), ChatContract.View {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK) {
 
             if (data != null && data.data != null) {
-                processFace(data.data)
+                chatPresenter.processAndSendEmotion(data.data)
             } else {
                 // TODO: Error
             }
@@ -138,7 +133,7 @@ class ChatFragment : Fragment(), ChatContract.View {
             fabSendMessage.setOnClickListener {
                 val text = editTextChatMessage.text.toString().trim()
                 if (!text.isEmpty()) {
-                    chatPresenter.sendMessage(text = text)
+                    chatPresenter.sendTextMessage(text = text)
                     this.dismiss()
                 } else {
                     // TODO: Empty message
@@ -165,10 +160,9 @@ class ChatFragment : Fragment(), ChatContract.View {
                 val file = File(Environment.getExternalStorageDirectory(),
                         "${UUID.randomUUID()}.jpg")
                 fotoapparat.takePicture().saveToFile(file).whenAvailable {
-                    // TODO: Filename
-                    Timber.w("Saved: ${file.absolutePath}")
+                    Timber.d("Saved: ${file.absolutePath}")
                     fotoapparat.stop()
-                    processFace(Uri.fromFile(file))
+                    chatPresenter.processAndSendEmotion(Uri.fromFile(file))
                     this.dismiss()
                 }
             }
@@ -189,45 +183,5 @@ class ChatFragment : Fragment(), ChatContract.View {
                     Timber.e("Error requesting permission: $t")
                 }
         )
-    }
-
-    // TODO: Send message
-    // MLKit Interactor?
-    override fun processFace(uri: Uri) {
-        val image = FirebaseVisionImage.fromFilePath(context!!, uri)
-
-        val options = FirebaseVisionFaceDetectorOptions.Builder()
-                .setPerformanceMode(ACCURATE)
-                .setLandmarkMode(ALL_LANDMARKS)
-                .setClassificationMode(ALL_CLASSIFICATIONS)
-                .build()
-
-        val detector = FirebaseVision.getInstance()
-                .getVisionFaceDetector(options)
-
-        detector.detectInImage(image).addOnSuccessListener { faces ->
-
-            // TODO: Only one face
-            for (face in faces) {
-                // Classification
-                if (face.smilingProbability != UNCOMPUTED_PROBABILITY) {
-                    val smileProb = face.smilingProbability
-                    Timber.d("Smiling probability: $smileProb")
-                }
-
-                if (face.leftEyeOpenProbability != UNCOMPUTED_PROBABILITY) {
-                    val leftEyeOpenProb = face.leftEyeOpenProbability
-                    Timber.d("Left eye open probability: $leftEyeOpenProb")
-                }
-
-                if (face.rightEyeOpenProbability != UNCOMPUTED_PROBABILITY) {
-                    val rightEyeOpenProb = face.rightEyeOpenProbability
-                    Timber.d("Right eye open probability: $rightEyeOpenProb")
-                }
-            }
-        }
-                .addOnFailureListener {
-                    showError(it.toString())
-                }
     }
 }
