@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
 import hr.tvz.firechat.App
 import hr.tvz.firechat.R
 import hr.tvz.firechat.data.model.User
@@ -41,9 +42,9 @@ class UserListFragment : Fragment(), UserListContract.View {
 
         userListPresenter.loadUsers()
 
-        // TODO: ItemSeparator/Decorator?
         recyclerViewUsers.apply {
             layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(this.context, LinearLayoutManager.VERTICAL))
             adapter = userListAdapter
         }
     }
@@ -61,11 +62,13 @@ class UserListFragment : Fragment(), UserListContract.View {
         progressBarUserList.gone()
     }
 
+    override fun showError(errorMessage: String?) {
+        Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+    }
+
     override fun showUsers(users: List<User>?) {
         recyclerViewUsers.visible()
-        // TODO: Remove hardcoded value. SharedPrefs currentUserInfo?
-        val id = FirebaseAuth.getInstance().currentUser?.uid
-        userListAdapter.submitList(users?.filter { it.id != id})
+        userListAdapter.submitList(users?.filter { it.id != userListPresenter.getCurrentUserId()})
     }
 
     override fun showUserProfile(userId: String?) {

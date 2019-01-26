@@ -16,7 +16,6 @@ class FirebaseAuthUserInteractor @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : AuthUserInteractor {
 
-    // TODO: Remove
     override fun getCurrentUser(): User? =
         UserMapper.convertFirebaseUserToLocal(firebaseAuth.currentUser!!)
 
@@ -28,7 +27,5 @@ class FirebaseAuthUserInteractor @Inject constructor(
         }
     }
 
-    override fun updateUser() {
-
-    }
+    override fun getCurrentUserId(): String? = getCurrentUser()?.id
 }

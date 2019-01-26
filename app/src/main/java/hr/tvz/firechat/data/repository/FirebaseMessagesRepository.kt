@@ -19,7 +19,6 @@ class FirebaseMessagesRepository @Inject constructor(
     override fun getMessagesCollection(): Flowable<MutableList<ChatMessage>> =
             RxFirestore.observeQueryRef(ref, ChatMessage::class.java)
 
-    // TODO: Completable?
     @SuppressLint("CheckResult")
     override fun saveMessage(chatMessage: ChatMessage) {
         RxFirestore.addDocument(ref, chatMessage)
@@ -28,7 +27,6 @@ class FirebaseMessagesRepository @Inject constructor(
             .subscribe({
                 Timber.w("Message successfully saved to: ${it.path}")
             }, {
-                // Error saving message
                 Timber.e("Error saving message: $it")
             })
     }

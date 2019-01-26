@@ -102,8 +102,8 @@ class MainModule {
         ChatPresenter(messagesInteractor, authUserInteractor, context)
 
     @Provides
-    fun provideUserListPresenter(userInteractor: UserInteractor): UserListContract.Presenter =
-        UserListPresenter(userInteractor)
+    fun provideUserListPresenter(userInteractor: UserInteractor, authUserInteractor: AuthUserInteractor): UserListContract.Presenter =
+        UserListPresenter(userInteractor, authUserInteractor)
 
     @Provides
     fun provideUserProfilePresenter(userInteractor: UserInteractor): UserProfileContract.Presenter =

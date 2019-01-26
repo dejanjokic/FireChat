@@ -7,10 +7,9 @@ interface AuthUserInteractor {
 
     fun getFirebaseUser(): FirebaseUser?
 
-    fun updateUser()
-
     fun logoutUser()
 
-    // TODO: Remove
     fun getCurrentUser(): User?
+
+    fun getCurrentUserId(): String?
 }

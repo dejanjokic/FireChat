@@ -4,7 +4,7 @@ interface BaseContract {
 
     interface View {
 
-        fun showError(errorMessage: String) {}
+        fun showError(errorMessage: String?) {}
 
         fun showLoading() {}
 

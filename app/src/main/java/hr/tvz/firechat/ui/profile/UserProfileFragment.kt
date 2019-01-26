@@ -62,19 +62,19 @@ class UserProfileFragment : Fragment(), UserProfileContract.View {
         contentUserProfile.visible()
     }
 
-    override fun showError(errorMessage: String) {
+    override fun showError(errorMessage: String?) {
         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
-    // TODO: Placeholder
     override fun showUserInfo(user: User?) = with(user) {
         if (user != null) {
             textViewUserProfileDisplayName.text = user.displayName
             textViewUserProfileEmail.text = user.email
             GlideApp.with(context!!)
-                    .load(this!!.profilePicturePath)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imageViewUserProfileAvatar)
+                .load(this!!.profilePicturePath)
+                .placeholder(R.drawable.ic_person)
+                .apply(RequestOptions.circleCropTransform())
+                .into(imageViewUserProfileAvatar)
         }
     }
 }

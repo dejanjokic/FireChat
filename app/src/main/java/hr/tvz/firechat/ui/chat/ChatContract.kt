@@ -10,6 +10,8 @@ interface ChatContract {
 
         fun showMessages(messages: List<ChatMessage>)
 
+        fun onMessageClick(message: ChatMessage)
+
         fun showTextDialog()
 
         fun showGalleryDialog()

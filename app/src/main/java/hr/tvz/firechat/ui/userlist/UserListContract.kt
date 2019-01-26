@@ -15,5 +15,7 @@ interface UserListContract {
     interface Presenter : BaseContract.Presenter<View> {
 
         fun loadUsers()
+
+        fun getCurrentUserId(): String
     }
 }

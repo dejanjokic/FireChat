@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout"
-    android:layout_width="250dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:maxWidth="300dp"
     android:layout_margin="4dp"
     android:padding="4dp"
     android:layout_gravity="start">
@@ -23,12 +24,15 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
+        android:id="@+id/receivedMessageContent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="250dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:padding="8dp"
+        android:background="@drawable/message_accent_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -38,24 +42,21 @@
             android:id="@+id/textViewReceivedMessageContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/message_accent_background"
-            android:padding="8dp"
             android:textColor="#DDD"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/receivedMessageContent"
+            app:layout_constraintStart_toStartOf="@id/receivedMessageContent"
+            app:layout_constraintTop_toTopOf="@id/receivedMessageContent"
             tools:text="People Person's Paper People" />
 
         <ImageView
             android:id="@+id/imageViewReceivedMessageEmotion"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:tint="#DDD"
+            app:layout_constraintBottom_toBottomOf="@id/receivedMessageContent"
+            app:layout_constraintStart_toStartOf="@id/receivedMessageContent"
+            app:layout_constraintTop_toTopOf="@id/receivedMessageContent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -61,9 +61,9 @@ class ChatFragment : Fragment(), ChatContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chatAdapter = ChatAdapter(arguments?.getString(CURRENT_USER_ID) ?: "", {
-            // OnClick
-        })
+        chatAdapter = ChatAdapter(arguments?.getString(CURRENT_USER_ID)) {
+            onMessageClick(it)
+        }
 
         chatPresenter.loadMessages()
 
@@ -99,7 +99,7 @@ class ChatFragment : Fragment(), ChatContract.View {
             if (data != null && data.data != null) {
                 chatPresenter.processAndSendEmotion(data.data)
             } else {
-                // TODO: Error
+                showError("Error loading data, please try again.")
             }
         }
     }
@@ -115,14 +115,17 @@ class ChatFragment : Fragment(), ChatContract.View {
         recyclerViewChatMessages.visible()
     }
 
-    override fun showError(errorMessage: String) {
+    override fun showError(errorMessage: String?) {
         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
     override fun showMessages(messages: List<ChatMessage>) {
         chatAdapter.submitList(messages.sortedWith(compareBy { it.timestamp }))
-        // TODO: Fix scroll?
         recyclerViewChatMessages.smoothScrollToPosition(chatAdapter.itemCount - 1)
+    }
+
+    override fun onMessageClick(message: ChatMessage) {
+        Toast.makeText(context, "${message.senderName}", Toast.LENGTH_SHORT).show()
     }
 
     override fun showTextDialog() {
@@ -135,8 +138,6 @@ class ChatFragment : Fragment(), ChatContract.View {
                 if (!text.isEmpty()) {
                     chatPresenter.sendTextMessage(text = text)
                     this.dismiss()
-                } else {
-                    // TODO: Empty message
                 }
             }
         }

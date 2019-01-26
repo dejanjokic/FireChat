@@ -18,15 +18,15 @@ import kotlinx.android.synthetic.main.list_item_received_message.view.*
 import kotlinx.android.synthetic.main.list_item_sent_message.view.*
 import timber.log.Timber
 
-class ChatAdapter(private val currentUserId: String, private val clickListener: (ChatMessage) -> Unit)
+class ChatAdapter(private val currentUserId: String? = "", private val clickListener: (ChatMessage) -> Unit)
     : ListAdapter<ChatMessage, ChatAdapter.MessageViewHolder>(ChatDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         return when (viewType) {
             R.layout.list_item_sent_message -> SentMessageViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_sent_message, parent,false))
+                .inflate(R.layout.list_item_sent_message, parent,false))
             else -> ReceivedMessageViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_received_message, parent, false))
+                .inflate(R.layout.list_item_received_message, parent, false))
         }
     }
 
@@ -41,7 +41,6 @@ class ChatAdapter(private val currentUserId: String, private val clickListener: 
         }
     }
 
-    // TODO: Timestamp?, SenderName?
     abstract class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         abstract fun bind(chatMessage: ChatMessage, clickListener: (ChatMessage) -> Unit)
     }
@@ -50,11 +49,11 @@ class ChatAdapter(private val currentUserId: String, private val clickListener: 
 
         override fun bind(chatMessage: ChatMessage, clickListener: (ChatMessage) -> Unit) = with(itemView) {
 
-            // TODO: Placeholder
             GlideApp.with(itemView)
-                    .load(chatMessage.senderAvatar)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imageView)
+                .load(chatMessage.senderAvatar)
+                .placeholder(R.drawable.ic_person)
+                .apply(RequestOptions.circleCropTransform())
+                .into(imageView)
 
             if (chatMessage.type == ChatMessage.Type.EMOTION) {
 
@@ -62,8 +61,8 @@ class ChatAdapter(private val currentUserId: String, private val clickListener: 
                 textViewReceivedMessageContent.gone()
 
                 GlideApp.with(itemView)
-                        .load(getFaceResourceId(context, chatMessage.emotion!!))
-                        .into(imageViewSentMessageEmotion)
+                    .load(getFaceResourceId(context, chatMessage.emotion!!))
+                    .into(imageViewReceivedMessageEmotion)
 
                 Timber.d("Ok")
 
@@ -74,6 +73,7 @@ class ChatAdapter(private val currentUserId: String, private val clickListener: 
                 textViewReceivedMessageContent.text = chatMessage.text
             }
 
+            setOnClickListener { clickListener(chatMessage)  }
         }
     }
 
@@ -89,8 +89,8 @@ class ChatAdapter(private val currentUserId: String, private val clickListener: 
                 Timber.d("Emotion: ${chatMessage.emotion}")
 
                 GlideApp.with(itemView)
-                        .load(getFaceResourceId(context, chatMessage.emotion!!))
-                        .into(imageViewSentMessageEmotion)
+                    .load(getFaceResourceId(context, chatMessage.emotion!!))
+                    .into(imageViewSentMessageEmotion)
 
                 Timber.d("Ok")
 
@@ -100,21 +100,23 @@ class ChatAdapter(private val currentUserId: String, private val clickListener: 
 
                 textViewSentMessageContent.text = chatMessage.text
             }
+
+            setOnClickListener { clickListener(chatMessage) }
         }
     }
 
     class ChatDiffCallback : DiffUtil.ItemCallback<ChatMessage>() {
 
         override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean =
-                oldItem.id == newItem.id
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean =
-                oldItem == newItem
+            oldItem == newItem
     }
 
     private fun getFaceResourceId(context: Context, emotion: ChatMessage.Emotion): Drawable {
         val resourceId = context.resources.getIdentifier(emotion.name.toLowerCase(), "drawable",
-                context.packageName)
+            context.packageName)
 
         return context.resources.getDrawable(resourceId)
     }

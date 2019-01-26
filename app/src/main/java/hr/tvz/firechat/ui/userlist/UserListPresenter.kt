@@ -1,5 +1,6 @@
 package hr.tvz.firechat.ui.userlist
 
+import hr.tvz.firechat.data.interactor.AuthUserInteractor
 import hr.tvz.firechat.data.interactor.UserInteractor
 import hr.tvz.firechat.ui.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -8,7 +9,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class UserListPresenter @Inject constructor(
-    private val userInteractor: UserInteractor
+    private val userInteractor: UserInteractor,
+    private val authUserInteractor: AuthUserInteractor
 ) : BasePresenter<UserListContract.View>(), UserListContract.Presenter {
 
     override fun loadUsers() {
@@ -24,11 +26,13 @@ class UserListPresenter @Inject constructor(
                     }
                 },
                 {
-                    // TODO: Error handling
+                    view?.showError(it.message)
                 }
             )
         if (d != null) {
             compositeDisposable.add(d)
         }
     }
+
+    override fun getCurrentUserId() = authUserInteractor.getCurrentUserId() ?: ""
 }
