@@ -68,7 +68,9 @@ class ChatFragment : Fragment(), ChatContract.View {
         chatPresenter.loadMessages()
 
         recyclerViewChatMessages.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context).apply {
+                stackFromEnd = true
+            }
             adapter = chatAdapter
         }
 
@@ -97,7 +99,7 @@ class ChatFragment : Fragment(), ChatContract.View {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK) {
 
             if (data != null && data.data != null) {
-                chatPresenter.processAndSendEmotion(data.data)
+                chatPresenter.processAndSendEmotion(data.data!!)
             } else {
                 showError("Error loading data, please try again.")
             }
