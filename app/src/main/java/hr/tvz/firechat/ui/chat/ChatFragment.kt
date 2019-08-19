@@ -24,7 +24,7 @@ import hr.tvz.firechat.util.Constants.MLKit.RESULT_LOAD_IMAGE
 import hr.tvz.firechat.util.ext.gone
 import hr.tvz.firechat.util.ext.visible
 import io.fotoapparat.Fotoapparat
-import io.fotoapparat.selector.front
+import io.fotoapparat.selector.back
 import kotlinx.android.synthetic.main.dialog_camera_message.*
 import kotlinx.android.synthetic.main.dialog_text_message.*
 import kotlinx.android.synthetic.main.fragment_chat.*
@@ -155,7 +155,7 @@ class ChatFragment : Fragment(), ChatContract.View {
 
         MaterialDialog(context!!).show {
             customView(R.layout.dialog_camera_message)
-            val fotoapparat = Fotoapparat(context = context, view = this.cameraView, lensPosition = front())
+            val fotoapparat = Fotoapparat(context = context, view = this.cameraView, lensPosition = back())
             fotoapparat.start()
             buttonCameraCapture.setOnClickListener {
                 val file = File(Environment.getExternalStorageDirectory(),
@@ -172,7 +172,9 @@ class ChatFragment : Fragment(), ChatContract.View {
 
     @SuppressLint("CheckResult")
     override fun checkCameraPermission() {
-        RxPermissions(this).request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(
+        RxPermissions(this).request(Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(
                 { result ->
                     if (result.isAccepted) {
                         showCameraDialog()

@@ -10,11 +10,7 @@ data class ChatMessage(
         val type: Type = Type.TEXT,
         val emotion: Emotion? = Emotion.FACE0
 ) {
-    enum class Type {
-        TEXT, EMOTION
-    }
+    enum class Type { TEXT, EMOTION }
 
-    enum class Emotion {
-        FACE0, FACE1, FACE2, FACE3, FACE4, FACE5, FACE6, FACE7, FACE8
-    }
+    enum class Emotion { FACE0, FACE1, FACE2, FACE3, FACE4, FACE5, FACE6, FACE7, FACE8 }
 }

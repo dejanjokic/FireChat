@@ -10,10 +10,9 @@ import io.reactivex.Maybe
 import javax.inject.Inject
 import javax.inject.Named
 
-class FirebaseUsersRepository @Inject constructor(
+class FirebaseUserRepository @Inject constructor(
     @Named(USERS_COLLECTION) private val ref: CollectionReference
-) : UsersRepository {
-
+) : UserRepository {
     override fun getUser(id: String): Maybe<User> =
         RxFirestore.getDocument(ref.document(id), User::class.java)
 

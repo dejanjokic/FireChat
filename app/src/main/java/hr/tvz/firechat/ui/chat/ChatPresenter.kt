@@ -26,7 +26,9 @@ class ChatPresenter @Inject constructor(
 
     override fun loadMessages() {
         view?.showLoading()
-        val d = messagesInteractor.getAllMessages()?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
+        val d = messagesInteractor.getAllMessages()
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe({
                     view?.apply {
                         hideLoading()
@@ -83,22 +85,27 @@ class ChatPresenter @Inject constructor(
                     var rightEyeOpenProb = 0F
 
                     // Classification
-                    if (face.smilingProbability != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+                    if (face.smilingProbability !=
+                        FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
                         smilingProb = face.smilingProbability
                         Timber.d("Smiling probability: $smilingProb")
                     }
 
-                    if (face.leftEyeOpenProbability != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+                    if (face.leftEyeOpenProbability !=
+                        FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
                         leftEyeOpenProb = face.leftEyeOpenProbability
                         Timber.d("Left eye open probability: $leftEyeOpenProb")
                     }
 
-                    if (face.rightEyeOpenProbability != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+                    if (face.rightEyeOpenProbability !=
+                        FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
                         rightEyeOpenProb = face.rightEyeOpenProbability
                         Timber.d("Right eye open probability: $rightEyeOpenProb")
                     }
 
-                    sendEmotionMessage(EmotionMapper.getEmotion(smilingProb, leftEyeOpenProb, rightEyeOpenProb))
+                    sendEmotionMessage(EmotionMapper.getEmotion(
+                        smilingProb, leftEyeOpenProb, rightEyeOpenProb
+                    ))
                 }
     }
 

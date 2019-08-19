@@ -4,7 +4,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import hr.tvz.firechat.data.model.ChatMessage
 import io.reactivex.Flowable
 
-interface MessagesRepository {
+interface MessageRepository {
 
     fun getMessagesCollection(): Flowable<MutableList<ChatMessage>>
 

@@ -5,7 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 
-interface UsersRepository {
+interface UserRepository {
 
     fun getAllUsers(): Flowable<MutableList<User>>
 

@@ -29,7 +29,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
         (application as App).component.inject(this)
         loginPresenter.attach(this)
-
         loginPresenter.performUserRouting()
     }
 
@@ -42,17 +41,14 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
             // User successfully signed in, continue the process
             if (resultCode == Activity.RESULT_OK) {
-
                 loginPresenter.saveUserInfoToDatabase()
             } else {
-
                 // Sign in failed
                 if (response == null) {
                     // User pressed back button
                     Timber.d("No sign in response")
                     return
                 }
-
                 if (response.error?.errorCode == ErrorCodes.NO_NETWORK) {
                     showError("No network connection, please try again.")
                     return

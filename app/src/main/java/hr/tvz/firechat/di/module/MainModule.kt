@@ -8,10 +8,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import hr.tvz.firechat.data.interactor.*
-import hr.tvz.firechat.data.repository.FirebaseMessagesRepository
-import hr.tvz.firechat.data.repository.FirebaseUsersRepository
-import hr.tvz.firechat.data.repository.MessagesRepository
-import hr.tvz.firechat.data.repository.UsersRepository
+import hr.tvz.firechat.data.repository.FirebaseMessageRepository
+import hr.tvz.firechat.data.repository.FirebaseUserRepository
+import hr.tvz.firechat.data.repository.MessageRepository
+import hr.tvz.firechat.data.repository.UserRepository
 import hr.tvz.firechat.ui.chat.ChatContract
 import hr.tvz.firechat.ui.chat.ChatPresenter
 import hr.tvz.firechat.ui.login.LoginContract
@@ -63,13 +63,13 @@ class MainModule {
      */
     @Provides
     @Singleton
-    fun provideFirebaseUsersRepository(@Named(USERS_COLLECTION) ref: CollectionReference): UsersRepository =
-        FirebaseUsersRepository(ref)
+    fun provideFirebaseUsersRepository(@Named(USERS_COLLECTION) ref: CollectionReference): UserRepository =
+        FirebaseUserRepository(ref)
 
     @Provides
     @Singleton
-    fun provideFirebaseMessagesRepository(@Named(MESSAGES_COLLECTION) ref: CollectionReference): MessagesRepository =
-        FirebaseMessagesRepository(ref)
+    fun provideFirebaseMessagesRepository(@Named(MESSAGES_COLLECTION) ref: CollectionReference): MessageRepository =
+        FirebaseMessageRepository(ref)
 
     /**
      * Interactor
@@ -79,19 +79,19 @@ class MainModule {
         FirebaseAuthUserInteractor(context, authUI, firebaseAuth)
 
     @Provides
-    fun provideFirebaseUserInteractor(repository: UsersRepository): UserInteractor =
+    fun provideFirebaseUserInteractor(repository: UserRepository): UserInteractor =
         FirebaseUserInteractor(repository)
 
     @Provides
-    fun provideFirebaseMessageInteractor(repository: MessagesRepository): MessagesInteractor =
+    fun provideFirebaseMessageInteractor(repository: MessageRepository): MessagesInteractor =
         FirebaseMessagesInteractor(repository)
 
     /**
      * Presenter
      */
     @Provides
-    fun provideLoginPresenter(authUserInteractor: AuthUserInteractor, usersRepository: UsersRepository): LoginContract.Presenter =
-        LoginPresenter(authUserInteractor, usersRepository)
+    fun provideLoginPresenter(authUserInteractor: AuthUserInteractor, userRepository: UserRepository): LoginContract.Presenter =
+        LoginPresenter(authUserInteractor, userRepository)
 
     @Provides
     fun provideMainPresenter(authUserInteractor: AuthUserInteractor): MainContract.Presenter =

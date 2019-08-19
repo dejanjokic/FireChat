@@ -1,12 +1,12 @@
 package hr.tvz.firechat.data.interactor
 
 import hr.tvz.firechat.data.model.ChatMessage
-import hr.tvz.firechat.data.repository.MessagesRepository
+import hr.tvz.firechat.data.repository.MessageRepository
 import io.reactivex.Observable
 import javax.inject.Inject
 
 class FirebaseMessagesInteractor @Inject constructor(
-    private val repository: MessagesRepository
+    private val repository: MessageRepository
 ) : MessagesInteractor {
 
     override fun getAllMessages(): Observable<MutableList<ChatMessage>>? =

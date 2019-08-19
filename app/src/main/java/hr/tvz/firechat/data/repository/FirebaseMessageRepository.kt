@@ -12,9 +12,9 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class FirebaseMessagesRepository @Inject constructor(
+class FirebaseMessageRepository @Inject constructor(
     @Named(MESSAGES_COLLECTION) private val ref: CollectionReference
-) : MessagesRepository {
+) : MessageRepository {
 
     override fun getMessagesCollection(): Flowable<MutableList<ChatMessage>> =
             RxFirestore.observeQueryRef(ref, ChatMessage::class.java)
@@ -25,7 +25,7 @@ class FirebaseMessagesRepository @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Timber.w("Message successfully saved to: ${it.path}")
+                Timber.d("Message saved successfully: ${it.path}")
             }, {
                 Timber.e("Error saving message: $it")
             })

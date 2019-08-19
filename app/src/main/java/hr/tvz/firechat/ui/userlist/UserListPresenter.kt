@@ -5,7 +5,6 @@ import hr.tvz.firechat.data.interactor.UserInteractor
 import hr.tvz.firechat.ui.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import javax.inject.Inject
 
 class UserListPresenter @Inject constructor(
@@ -15,11 +14,11 @@ class UserListPresenter @Inject constructor(
 
     override fun loadUsers() {
         view?.showLoading()
-        val d = userInteractor.getAllUsers()?.subscribeOn(Schedulers.io())
+        val d = userInteractor.getAllUsers()
+            ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(
                 {
-                    Timber.w("The presenter has ${it.size} users!")
                     view?.apply {
                         hideLoading()
                         showUsers(it)
